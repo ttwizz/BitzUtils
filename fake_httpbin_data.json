@@ -1,0 +1,14 @@
+{
+  "args": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Cookie": "", 
+    "Host": "httpbin.org", 
+    "Syn-Fingerprint": "3chas90ajaxbllqacpocqrczyboy40vweibms4esq95lcl12zc8jcc42go5m77lqnedybl18uskjai206w68r9eajikm29ws17eon4puyvcg4bqxuz1spofk56v3qz5s", 
+    "Syn-User-Identifier": "9pptkso2dc8mlp5tc6hfor0zatznldn6wmpjbcm5vgmz8b7kvivl16dcthn3gztxcvxbyugxzhir5nftujvnlurn68ypmpvmts8cippeeu0rztz2l43h9dxu2678x04i", 
+    "User-Agent": "synx/v6.96.9", 
+    "X-Amzn-Trace-Id": "Root=1-626bf2c8-60aa72480802f6227b3a83d3"
+  }, 
+  "origin": "69.696.96.96", 
+  "url": "http://httpbin.org/get"
+}
