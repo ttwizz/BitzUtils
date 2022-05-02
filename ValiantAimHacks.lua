@@ -49,6 +49,7 @@ getgenv().ValiantAimHacks = {
             TeamColor = LocalPlayer.TeamColor,
         },
     },
+    CustomFilter = {},
     BlacklistedPlayers = {LocalPlayer},
     WhitelistedPUIDs = {91318356},
 }
@@ -92,7 +93,7 @@ function ValiantAimHacks.isPartVisible(Part, PartDescendant)
         -- // Vars: Calculating if is visible
         local raycastParams = RaycastParamsnew()
         raycastParams.FilterType = EnumRaycastFilterTypeBlacklist
-        raycastParams.FilterDescendantsInstances = {Character, CurrentCamera}
+        raycastParams.FilterDescendantsInstances = {Character, CurrentCamera, ValiantAimHacks.CustomFilter}
 
         local Result = Raycast(Workspace, Origin, Part.Position - Origin, raycastParams)
         if (Result) then
