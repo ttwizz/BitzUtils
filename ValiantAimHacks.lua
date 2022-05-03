@@ -83,6 +83,9 @@ end
 
 -- // Customisable Checking Functions: Is a part visible
 function ValiantAimHacks.isPartVisible(Part, PartDescendant)
+    if not (ValiantAimHacks.VisibleCheck) then 
+        return true 
+    end
     -- // Vars
     local Character = LocalPlayer.Character or CharacterAddedWait(CharacterAdded)
     local Origin = CurrentCamera.CFrame.Position
@@ -347,7 +350,7 @@ function ValiantAimHacks.getClosestPlayerToCursor()
                 -- // Check if is in FOV
                 if (circle.Radius > Magnitude and Magnitude < ShortestDistance) then
                     -- // Check if Visible
-                    if (ValiantAimHacks.VisibleCheck and not ValiantAimHacks.isPartVisible(TargetPartTemp, Character)) then continue end
+                    if not (ValiantAimHacks.isPartVisible(TargetPartTemp, Character)) then continue end
 
                     -- //
                     ClosestPlayer = Player
