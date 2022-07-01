@@ -56,7 +56,7 @@ SilentAimbotFunctions = {
             local PlayerHead      = (PlayerCharacter and PlayerCharacter:FindFirstChild("Head")) or (nil)
             local PlayerHitPart   = (PlayerCharacter and PlayerCharacter:FindFirstChild(SilentAimbotFunctions.HitPart)) or (nil)
 
-            if (PlayerHumanoid and PlayerHumanoid.Health > 0) and PlayerRootPart and PlayerHead and PlayerHitPart then 
+            if PlayerHumanoid and PlayerRootPart and PlayerHead and PlayerHitPart then 
                 return true, PlayerCharacter, PlayerHitPart
             end
             return false, nil, nil
