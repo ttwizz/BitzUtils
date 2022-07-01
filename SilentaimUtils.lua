@@ -55,7 +55,9 @@ SilentAimbotFunctions = {
             local PlayerRootPart  = (PlayerCharacter and PlayerCharacter:FindFirstChild("HumanoidRootPart")) or (nil)
             local PlayerHead      = (PlayerCharacter and PlayerCharacter:FindFirstChild("Head")) or (nil)
             local PlayerHitPart   = (PlayerCharacter and PlayerCharacter:FindFirstChild(SilentAimbotFunctions.HitPart)) or (nil)
-
+            if not PlayerHitPart then
+                warn("FUCKING FAIL")
+            end
             if PlayerHumanoid and PlayerRootPart and PlayerHead and PlayerHitPart then 
                 return true, PlayerCharacter, PlayerHitPart
             end
