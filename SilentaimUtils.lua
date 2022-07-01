@@ -36,8 +36,14 @@ SilentAimbotFunctions = {
             if self.WhitelistedPlayers[Player] then 
                 return false 
             end
-            if self.TeamCheck and (self.WhitelistedTeams[Player.Team]) or (CountTeams() > 0 and LocalPlayer.Team ~= Player.Team) then 
-                return false
+
+            if self.TeamCheck then
+                if self.WhitelistedTeams[Player.Team] then 
+                    return false 
+                end
+                if (CountTeams() > 0) and LocalPlayer.Team == Player.Team then
+                    return false
+                end
             end
         end
 
