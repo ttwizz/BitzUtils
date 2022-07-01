@@ -256,7 +256,7 @@ SilentAimbotFunctions = {
 -- // RenderStepped Loop for Updating
 RunService.RenderStepped:Connect(function()
     Character = LocalPlayer.Character
-
+    Camera    = Workspace.CurrentCamera
     --// Update Circle
     local Settings = SilentAimbotFunctions.FOVSettings
     local Position = (Settings.Position == "Middle" and Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)) or (Settings.Position == "Mouse" and UserInputService:GetMouseLocation())
