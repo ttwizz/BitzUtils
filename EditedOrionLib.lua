@@ -44,6 +44,8 @@ function GetSave(Name)
     return Client["Flags"][Name]
 end
 
+local Signal         = loadstring(game.HttpGet(game, "https://raw.githubusercontent.com/NougatBitz/BitzUtils/main/Signal.lua"))()
+local CallbackSignal = Signal.new()
 
 local OrionLib   = loadstring(game:HttpGet(("https://raw.githubusercontent.com/shlexware/Orion/main/source")))()
 OrionLib.Icons   = {
@@ -77,6 +79,7 @@ local OldMakeWindow = OrionLib.MakeWindow; OrionLib.MakeWindow = function(self, 
                     rawset(Config, "Default", Default)
                     rawset(Config, "Flag", NewFlag)
                     rawset(Config, "Callback", function(...)
+                        CallbackSignal:Fire(Index, ...)
                         __updatesettings(OrionLib)
     
                         return Callback(...)
@@ -97,4 +100,4 @@ local OldMakeWindow = OrionLib.MakeWindow; OrionLib.MakeWindow = function(self, 
     return NewWindow
 end
 
-return OrionLib
+return OrionLib, CallbackSignal
