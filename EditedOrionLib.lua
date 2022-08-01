@@ -79,7 +79,7 @@ local OldMakeWindow = OrionLib.MakeWindow; OrionLib.MakeWindow = function(self, 
                     rawset(Config, "Default", Default)
                     rawset(Config, "Flag", NewFlag)
                     rawset(Config, "Callback", function(...)
-                        CallbackSignal:Fire(Index, ...)
+                        CallbackSignal:Fire(Index, NewFlag, ...)
                         __updatesettings(OrionLib)
     
                         return Callback(...)
