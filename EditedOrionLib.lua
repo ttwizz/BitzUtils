@@ -18,7 +18,7 @@ local FlagGeneration = {} do
     end
 end
 
-local FolderName     = "DarkHubTesting"
+local FolderName     = "DarkHub"
 local SettingsName   = (FolderName .. "/%s.json"):format( tostring(game.GameId) )
 local Client         = isfile(SettingsName) and game:GetService("HttpService"):JSONDecode( readfile(SettingsName) ) or { Flags = {} }
 
