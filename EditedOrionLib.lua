@@ -74,12 +74,12 @@ local OldMakeWindow = OrionLib.MakeWindow; OrionLib.MakeWindow = function(self, 
                 local Callback = Config and rawget(Config, "Callback") 
                 if Callback and Index ~= "AddButton" then
                     local NewFlag = Config.Flag or FlagGeneration:GenFlag(Config)
+                    local Default
 
-                    if Config.IgnoreCustom then
-                        local Default = (GetSave(NewFlag)) or (Config.Default) or (OrionLib.DefaultValues[Index])
+                    if (not Config.IgnoreCustom) then
+                        Default = (GetSave(NewFlag)) or (Config.Default) or (OrionLib.DefaultValues[Index])
                         rawset(Config, "Default", Default)
                         rawset(Config, "Flag", NewFlag)
-                        rawset(OrionLib.Flags[NewFlag], "Value", Default)
                     end
 
                     rawset(Config, "Callback", function(...)
@@ -91,8 +91,15 @@ local OldMakeWindow = OrionLib.MakeWindow; OrionLib.MakeWindow = function(self, 
     
                         return Callback(...)
                     end)
+
+
+                    local Result = Value(self, Config, ...)
                     
-                    return Value(self, Config, ...)
+                    if (not Config.IgnoreCustom) then
+                        rawset(OrionLib.Flags[NewFlag], "Value", Default)
+                    end
+                    
+                    return Result
                 else
                     return Value(self, Config, ...)
                 end
