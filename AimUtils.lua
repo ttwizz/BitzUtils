@@ -53,18 +53,8 @@ local AimingSettings = {
     },
 
     Ignored = {
-        WhitelistMode = {
-            Players = false,
-            Teams = false
-        },
-
-        Teams = {},
-        IgnoreLocalTeam = true,
-
-        Players = {
-            LocalPlayer,
-            91318356
-        }
+        WhitelistMode = {Players = false},
+        Players = {LocalPlayer}
     }
 }
 local Aiming = {
@@ -355,49 +345,7 @@ do
         return false
     end
 
-    function Ignored.IgnoreTeam(Team, TeamColor)
-        local IgnoredTeams = IgnoredSettings.Teams
-
-        for _, IgnoredTeam in pairs(IgnoredTeams) do
-            if (IgnoredTeam.Team == Team and IgnoredTeam.TeamColor == TeamColor) then
-                return false
-            end
-        end
-
-        tableinsert(IgnoredTeams, {Team, TeamColor})
-        return true
-    end
-
-    function Ignored.UnIgnoreTeam(Team, TeamColor)
-        local IgnoredTeams = IgnoredSettings.Teams
-
-        for i, IgnoredTeam in pairs(IgnoredTeams) do
-            if (IgnoredTeam.Team == Team and IgnoredTeam.TeamColor == TeamColor) then
-                tableremove(IgnoredTeams, i)
-                return true
-            end
-        end
-
-        return false
-    end
-
-    function Ignored.IsIgnoredTeam(Player)
-        local IgnoredTeams = IgnoredSettings.Teams
-
-        if (IgnoredSettings.IgnoreLocalTeam) then
-            return Utilities.TeamMatch(LocalPlayer, Player)
-        end
-
-        for _, IgnoredTeam in pairs(IgnoredTeams) do
-            if (Utilities.TeamMatch(Player, IgnoredTeam)) then
-                return not WhitelistMode.Teams
-            end
-        end
-
-        return false
-    end
-
-    function Ignored.IsIgnoredPlayer(Player)
+    function Ignored.IsIgnored(Player)
         local IgnoredPlayers = IgnoredSettings.Players
 
         for _, IgnoredPlayer in pairs(IgnoredPlayers) do
@@ -417,18 +365,6 @@ do
         end
 
         return false
-    end
-
-    function Ignored.IsIgnored(Player)
-        return Ignored.IsIgnoredPlayer(Player) or Ignored.IsIgnoredTeam(Player)
-    end
-
-    function Ignored.TeamCheck(Toggle)
-        if (Toggle) then
-            return Ignored.IgnoreTeam(LocalPlayer.Team, LocalPlayer.TeamColor)
-        end
-
-        return Ignored.UnIgnoreTeam(LocalPlayer.Team, LocalPlayer.TeamColor)
     end
 end
 
