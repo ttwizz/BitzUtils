@@ -18,7 +18,7 @@ local FlagGeneration = {} do
     end
 end
 
-local FolderName     = "BitzsScript"
+local FolderName     = "BitzScript"
 local SettingsName   = (FolderName .. "/%s.json"):format( tostring(game.GameId) )
 local Client         = isfile(SettingsName) and game:GetService("HttpService"):JSONDecode( readfile(SettingsName) ) or { Flags = {} }
 
@@ -55,7 +55,7 @@ OrionLib.Icons   = {
     Settings = "rbxassetid://10403508076";
     Others   = "rbxassetid://10403543022";
 };
-OrionLib.DefaultValues = {
+OrionLib.DefaultCreateObjects = {
     ["AddToggle"] = false;
     ["AddColorpicker"] = Color3.fromRGB(255, 255, 255);
     ["AddSlider"] = 0;
@@ -63,51 +63,70 @@ OrionLib.DefaultValues = {
     ["AddBind"] = Enum.KeyCode.E;
 }
 
+local Blocked = {
+    ["AddButton"] = true;
+    ["Destroy"] = true;
+    ["Init"] = true;
+    ["MakeNotification"] = true;
+}
+
+local CustomCreateObject; CustomCreateObject = function(ObjectType, CreateObject, self, Config, ...)
+    if ObjectType == "AddSection" then
+        local NewSection = CreateObject(self, Config, ...) 
+
+        for ObjType, CreateObj in next, NewSection do 
+            NewSection[ObjType] = function(self, Config, ...)
+                return CustomCreateObject(ObjType, CreateObj, self, Config, ...)
+            end 
+        end
+
+        return NewSection
+    elseif Blocked[ObjectType] then
+        return CreateObject(self, Config, ...)
+    end
+
+    local Callback = Config.Callback or (function() end)
+    local Flag = Config.Flag or FlagGeneration:GenFlag(Config)
+    local Default = GetSave(Flag) or Config.Default or OrionLib.DefaultCreateObjects[ObjectType]
+
+    Config.Callback = function(...)
+        warn("CALLBACK.")
+        local Result = Callback(...)
+
+        CallbackSignal:Fire(ObjectType, Flag, ...)
+
+        if (not Config.IgnoreCustom) then
+            __updatesettings(OrionLib)
+        end
+
+        return Callback
+    end
+
+    warn(Flag, Default)
+    Config.Flag = Flag
+    Config.Default = Default
+
+    local Result = CreateObject(self, Config, ...)
+        
+    if (not Config.IgnoreCustom) then
+        rawset(OrionLib.Flags[Flag], "Value", Default)
+    end
+        
+    return Result
+end
+
 local OldMakeWindow = OrionLib.MakeWindow; OrionLib.MakeWindow = function(self, Config)
     local NewWindow = OldMakeWindow(self, Config)
 
     local OldMakeTab = NewWindow.MakeTab; NewWindow.MakeTab = function(self, Config)
         local NewTab = OldMakeTab(self, Config)
         
-        for Index, Value in next, NewTab do 
-            NewTab[Index] = function(self, Config, ...)
-                local Callback = rawget(Config, "Callback") 
-                if Callback and Index ~= "AddButton" then
-                    local NewFlag = Config.Flag or FlagGeneration:GenFlag(Config)
-                    local Default
-
-                    if (not Config.IgnoreCustom) then
-                        Default = (GetSave(NewFlag)) or (Config.Default) or (OrionLib.DefaultValues[Index])
-                        rawset(Config, "Default", Default)
-                        rawset(Config, "Flag", NewFlag)
-                    end
-
-                    rawset(Config, "Callback", function(...)
-                        warn("CUSTOM CALLBACK!")
-                        CallbackSignal:Fire(Index, NewFlag, ...)
-
-                        if not Config.IgnoreCustom then 
-                            warn("__updatesettings!")
-                            __updatesettings(OrionLib)
-                        end
-    
-                        return Callback(...)
-                    end)
-
-
-                    local Result = Value(self, Config, ...)
-                    
-                    if (not Config.IgnoreCustom) then
-                        warn("DEFAULT SET!")
-                        rawset(OrionLib.Flags[NewFlag], "Value", Default)
-                    end
-                    
-                    return Result
-                else
-                    return Value(self, Config, ...)
-                end
-            end
+        for ObjectType, CreateObject in next, NewTab do 
+            NewTab[ObjectType] = function(self, Config, ...)
+                return CustomCreateObject(ObjectType, CreateObject, self, Config, ...)
+            end 
         end
+        
         return NewTab
     end
     return NewWindow
