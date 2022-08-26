@@ -18,7 +18,7 @@ local FlagGeneration = {} do
     end
 end
 
-local FolderName     = "BitzScripts"
+local FolderName     = "DarkHub"
 local SettingsName   = (FolderName .. "/%s.json"):format( tostring(game.GameId) )
 local Client         = isfile(SettingsName) and game:GetService("HttpService"):JSONDecode( readfile(SettingsName) ) or { Flags = {} }
 
@@ -71,7 +71,7 @@ local OldMakeWindow = OrionLib.MakeWindow; OrionLib.MakeWindow = function(self, 
         
         for Index, Value in next, NewTab do 
             NewTab[Index] = function(self, Config, ...)
-                local Callback = Config and rawget(Config, "Callback") 
+                local Callback = rawget(Config, "Callback") 
                 if Callback and Index ~= "AddButton" then
                     local NewFlag = Config.Flag or FlagGeneration:GenFlag(Config)
                     local Default
@@ -83,9 +83,11 @@ local OldMakeWindow = OrionLib.MakeWindow; OrionLib.MakeWindow = function(self, 
                     end
 
                     rawset(Config, "Callback", function(...)
+                        warn("CUSTOM CALLBACK!")
                         CallbackSignal:Fire(Index, NewFlag, ...)
 
                         if not Config.IgnoreCustom then 
+                            warn("__updatesettings!")
                             __updatesettings(OrionLib)
                         end
     
@@ -96,6 +98,7 @@ local OldMakeWindow = OrionLib.MakeWindow; OrionLib.MakeWindow = function(self, 
                     local Result = Value(self, Config, ...)
                     
                     if (not Config.IgnoreCustom) then
+                        warn("DEFAULT SET!")
                         rawset(OrionLib.Flags[NewFlag], "Value", Default)
                     end
                     
